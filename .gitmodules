@@ -1,0 +1,9 @@
+[submodule "backend"] 
+  path = backend
+  url = git://github.com/IOT-group-9/backend
+[submodule "broadcast-backend"] 
+  path = broadcast-backend
+  url = git://github.com/IOT-group-9/broadcast-backend
+[submodule "frontend"] 
+  path = frontend 
+  url = git://github.com/IOT-group-9/frontend

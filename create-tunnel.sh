@@ -1,6 +1,6 @@
 #!/bin/bash
-# Get services and store in array
-readarray -t services < <(kubectl get svc -o custom-columns=NAME:.metadata.name,PORTS:.spec.ports[*].port | tail -n +2)
+# Get services with namespaces and store in array
+readarray -t services < <(kubectl get svc -A -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,PORTS:.spec.ports[*].port | tail -n +2)
 
 # Check if any services were found
 if [ ${#services[@]} -eq 0 ]; then
@@ -25,8 +25,9 @@ done
 
 # Extract selected service info
 selected=${services[$((selection-1))]}
-service_name=$(echo "$selected" | awk '{print $1}')
-ports=($(echo "$selected" | awk '{$1=""; print $0}' | tr ',' ' '))
+namespace=$(echo "$selected" | awk '{print $1}')
+service_name=$(echo "$selected" | awk '{print $2}')
+ports=($(echo "$selected" | awk '{$1=""; $2=""; print $0}' | tr ',' ' '))
 
 # If multiple ports exist, let user choose
 if [ ${#ports[@]} -gt 1 ]; then
@@ -46,6 +47,7 @@ if [ ${#ports[@]} -gt 1 ]; then
 else
     selected_port=${ports[0]}
 fi
+
 # Get subdomain from user
 while true; do
     read -p "Enter subdomain (only the prefix, without .relentlessadmin.org): " subdomain
@@ -59,12 +61,13 @@ done
 
 # Preview the command
 echo -e "\nCommand Preview:"
-echo "kubectl -n default create ingress ${service_name}-via-cf-tunnel --rule=\"${subdomain}.relentlessadmin.org/*=${service_name}:${selected_port}\" --class cloudflare-tunnel"
+echo "kubectl -n ${namespace} create ingress ${service_name}-via-cf-tunnel --rule=\"${subdomain}.relentlessadmin.org/*=${service_name}:${selected_port}\" --class cloudflare-tunnel"
+
 # Ask for confirmation
 read -p "Do you want to execute this command? (y/n): " confirm
 if [[ $confirm =~ ^[Yy]$ ]]; then
     # Execute the command
-    kubectl -n default create ingress "${service_name}-via-cf-tunnel" --rule="${subdomain}.relentlessadmin.org/*=${service_name}:${selected_port}" --class cloudflare-tunnel
+    kubectl -n "${namespace}" create ingress "${service_name}-via-cf-tunnel" --rule="${subdomain}.relentlessadmin.org/*=${service_name}:${selected_port}" --class cloudflare-tunnel
     
     if [ $? -eq 0 ]; then
         echo -e "\nIngress created successfully!"
@@ -75,6 +78,3 @@ if [[ $confirm =~ ^[Yy]$ ]]; then
 else
     echo "Command cancelled."
 fi
-
-#kubectl -n kubernetes-dashboard create ingress dashboard-via-cf-tunnel --rule="fedorak8.relentlessadmin.org/*=kubernetes-dashboard:80" --class cloudflare-tunnel
-#kubectl -n default create ingress api-via-cf-tunnel --rule="fedoraapi.relentlessadmin.org/*=api:8000" --class cloudflare-tunnel

@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+    kompose.version: 1.34.0 (cbf2835db)
+  labels:
+    io.kompose.service: backend-migrator
+  name: backend-migrator
+spec:
+  containers:
+    - args:
+        - piccolo
+        - migrations
+        - forwards
+        - all
+      env:
+        - name: APP_ENABLE_SQLITE
+          value: "false"
+        - name: PICCOLO_CONF
+          value: app.piccolo_conf
+        - name: app_DB_BASE
+          value: app
+        - name: app_DB_HOST
+          value: db
+        - name: app_DB_PASS
+          value: app
+        - name: app_DB_PORT
+          value: "5432"
+        - name: app_DB_USER
+          value: app
+      image: qazer25/iot-backend:latest
+      name: backend-migrator
+  restartPolicy: Never

@@ -21,7 +21,7 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - image: qazer25/iot-frontend
+        - image: qazer25/iot-frontend:latest
           name: frontend
           ports:
             - containerPort: 3000

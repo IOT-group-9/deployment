@@ -52,7 +52,7 @@ fi
 while true; do
     read -p "Enter subdomain (only the prefix, without .relentlessadmin.org): " subdomain
     # Check if subdomain is not empty and contains only valid characters
-    if [[ $subdomain =~ ^[a-zA-Z0-9-]+$ ]]; then
+    if [[ $subdomain =~ ^[a-zA-Z0-9.-]+$ ]]; then
         break
     else
         echo "Invalid subdomain. Please use only letters, numbers, and hyphens."

@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+    kompose.service.healthcheck.readiness.tcp_port: "6379"
     kompose.version: 1.34.0 (cbf2835db)
   labels:
     io.kompose.service: redis
@@ -16,6 +17,7 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+        kompose.service.healthcheck.readiness.tcp_port: "6379"
         kompose.version: 1.34.0 (cbf2835db)
       labels:
         io.kompose.service: redis
@@ -25,16 +27,12 @@ spec:
             - name: ALLOW_EMPTY_PASSWORD
               value: "yes"
           image: bitnami/redis:6.2.5
-          livenessProbe:
-            exec:
-              command:
-                - redis-cli ping
-            failureThreshold: 50
-            periodSeconds: 1
-            timeoutSeconds: 3
           name: redis
           ports:
             - containerPort: 6379
               protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 6379
       hostname: app-redis
       restartPolicy: Always

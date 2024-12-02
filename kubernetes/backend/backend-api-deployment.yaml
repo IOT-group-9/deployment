@@ -38,6 +38,8 @@ spec:
               value: "true"
             - name: APP_HOST
               value: 0.0.0.0
+            - name: APP_LISTENING_URL
+              value: http://broadcast-backend-api.broadcast-backend:8000
             - name: APP_RABBIT_HOST
               value: rmq
             - name: APP_REDIS_HOST

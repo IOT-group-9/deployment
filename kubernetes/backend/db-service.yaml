@@ -3,7 +3,9 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+    kompose.service.healthcheck.readiness.tcp_port: "5432"
     kompose.version: 1.34.0 (cbf2835db)
+    kompose.volume.size: 1Gi
   labels:
     io.kompose.service: db
   name: db

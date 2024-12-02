@@ -3,7 +3,9 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+    kompose.service.healthcheck.readiness.tcp_port: "5432"
     kompose.version: 1.34.0 (cbf2835db)
+    kompose.volume.size: 1Gi
   labels:
     io.kompose.service: db
   name: db
@@ -18,7 +20,9 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert -f ./docker-compose.yml --build local -o ../kubernetes/./backend/
+        kompose.service.healthcheck.readiness.tcp_port: "5432"
         kompose.version: 1.34.0 (cbf2835db)
+        kompose.volume.size: 1Gi
       labels:
         io.kompose.service: db
     spec:
@@ -26,28 +30,26 @@ spec:
         - env:
             - name: POSTGRES_DB
               value: app
+            - name: POSTGRES_INITDB_ARGS
+              value: --auth-host=scram-sha-256
             - name: POSTGRES_PASSWORD
               value: app
             - name: POSTGRES_USER
               value: app
           image: postgres:16.3-bullseye
-          livenessProbe:
-            exec:
-              command:
-                - pg_isready -U app
-            failureThreshold: 40
-            periodSeconds: 2
-            timeoutSeconds: 3
           name: db
           ports:
             - containerPort: 5432
               protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: 5432
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: app-db-data
+              name: app-db-prod-data
       hostname: db
       restartPolicy: Always
       volumes:
-        - name: app-db-data
+        - name: app-db-prod-data
           persistentVolumeClaim:
-            claimName: app-db-data
+            claimName: app-db-prod-data

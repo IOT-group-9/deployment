@@ -1,5 +1,14 @@
 #! /bin/bash
-set -e 
-docker push qazer25/iot-backend
-docker push qazer25/iot-broadcast-backend
-docker push qazer25/iot-frontend
+set -e
+# Get the directory of the script
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Load .env file from the same directory
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+fi
+
+
+docker push $backend1docker
+docker push $backend2docker
+docker push $frontenddocker

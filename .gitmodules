@@ -8,5 +8,5 @@
   path = frontend 
   url = git://github.com/IOT-group-9/frontend
 [submodule "thingsboard"]
-  path = thingsboard
+  path = thingsboard-ce-k8s
   url = git://github.com/thingsboard/thingsboard-ce-k8s

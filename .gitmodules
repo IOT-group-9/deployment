@@ -1,12 +1,12 @@
 [submodule "backend"] 
   path = backend
-  url = git://github.com/IOT-group-9/backend
+  url = https://github.com/IOT-group-9/backend
 [submodule "broadcast-backend"] 
   path = broadcast-backend
-  url = git://github.com/IOT-group-9/broadcast-backend
+  url = https://github.com/IOT-group-9/broadcast-backend
 [submodule "frontend"] 
   path = frontend 
-  url = git://github.com/IOT-group-9/frontend
+  url = https://github.com/IOT-group-9/frontend
 [submodule "thingsboard"]
   path = thingsboard-ce-k8s
-  url = git://github.com/thingsboard/thingsboard-ce-k8s
+  url = https://github.com/thingsboard/thingsboard-ce-k8s

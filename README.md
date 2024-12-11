@@ -107,7 +107,9 @@ rebuild from scratch and change the docker. You can change it in the docker-comp
 
 6. Account for limited wifi range (alternative is to use BLE)
     - ThingsBoard provide a IOT gateway via BLE, so we can have multiple ESP32 connected to one Ardunio or  
-    microcontroller with better specs, but this arduino still requires internet connection, and BLE does have a short range
+    microcontroller with better specs installed with this gateway, but this arduino still requires internet connection, and BLE does have a short range
+
+    #### Gateway visual (it looks cool)
     ![alt text](images/python-gateway-animd-ff.svg)
 
 7. Add some AI/ML
